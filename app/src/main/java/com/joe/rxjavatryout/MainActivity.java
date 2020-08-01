@@ -2,8 +2,11 @@ package com.joe.rxjavatryout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -21,14 +24,18 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String TAG = MainActivity.class.getSimpleName();
+    TextView tv1;
     Integer i = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        tv1 = findViewById(R.id.tv1);
+        tv1.setOnClickListener(this);
 
         //===================Observable 被觀察者======================
         //被觀察者-observable 負責拋出需求、待做的事情(emit)
@@ -66,36 +73,36 @@ public class MainActivity extends AppCompatActivity {
 
         //4.延遲創建
         //觀察者Observer訂閱時，才動態創建被觀察者Obervable及發送事件
-        Observable observable4 = Observable.defer(new Callable<ObservableSource>() {
-            @Override
-            public ObservableSource call() throws Exception {
-                return Observable.just(i);
-            }
-        });
-
-        i = 15;
-
-        observable4.subscribe(new Observer<Integer>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(Integer integer) {
-                //訂閱的時候會取得最新的Observable的值，因此此時印出來的是15
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
+//        Observable observable4 = Observable.defer(new Callable<ObservableSource>() {
+//            @Override
+//            public ObservableSource call() throws Exception {
+//                return Observable.just(i);
+//            }
+//        });
+//
+//        i = 15;
+//
+//        observable4.subscribe(new Observer<Integer>() {
+//            @Override
+//            public void onSubscribe(Disposable d) {
+//
+//            }
+//
+//            @Override
+//            public void onNext(Integer integer) {
+//                //訂閱的時候會取得最新的Observable的值，因此此時印出來的是15
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//
+//            }
+//        });
 
         //5.延遲指定時間後，發送一個數值0
         Observable.timer(2, TimeUnit.SECONDS)
@@ -225,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        //2.Subscriber接口
+        //Subscriber接口
         //預設是先走onSubscibe()
         Subscriber<Integer> subscriber = new Subscriber<Integer>() {
             @Override
@@ -300,5 +307,11 @@ public class MainActivity extends AppCompatActivity {
         //上面組合記得執行順序是：觀察者Observer的onSubscribe -> 被觀察者的subscribe -> 觀察者的onNext -> 觀察者的onComplete
 
 
+    }
+
+    @Override
+    public void onClick(View v) {
+//        startActivity(new Intent(this, RxJavaRetrofitActivity.class));
+        startActivity(new Intent(this, RxJavaRetrofitConditionActivity.class));
     }
 }
